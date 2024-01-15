@@ -22,7 +22,9 @@ kubectl create namespace kahu
 
 2) Clone kahu repository to get deploy related files
 ```shell
-git clone https://github.com/soda-cdm/kahu.git
+git clone https://github.com/sushanthakumar/kahu.git
+cd kahu
+git checkout with-all-csi
 ```
 
 3) Deploy kahu custom resource definitions (CRD)
@@ -85,16 +87,22 @@ kubectl get pods -n kahu
 #### Install volume backup provider
 For performing backup which involves volume, corresponding volume provider needs to be deployed.
 
-For demonstration, we use OpenEBS ZFS CSI Driver for provisioning local PVs.
-To deploy OpenEBS ZFS CSI Driver and set it up for volume provisioning, please refer the [documentation](https://github.com/openebs/zfs-localpv)
+**csi snapshot provider**
 
-Once it is completed, follow below steps
+For the backup of volume provided by any csi driver, csi snapshot provider can be used.
+To deploy this provider, follow below steps
 
-1) Create openebs zfs volume provider deployment
+1) Change the directory to volume provider
 ```shell
-kubectl create -f https://raw.githubusercontent.com/soda-cdm/kahu/main/deploy/volumeprovider/openebs-zfs-provider-deployment.yaml
-```  
+cd kahu/deploy/volumeprovider
+```
+
+2) Install csi snapshot provider
+```shell
+kubectl apply -f csi-snapshot-provider-deployment.yaml
+```
+  
 2) Verify the state of deployment and ensure it is running
 ```shell
-kubectl get pods -n kahu | grep kahu-openebs-zfs-provider
+kubectl get pods -n kahu | grep kahu-csi-snapshotter-provider
 ```
